@@ -38,16 +38,62 @@ public class CityListTest {
     void testGetCities() {
         CityList cityList = mockCityList();
 
-        // This line checks if the first city in the cityList (retrieved by cityList.getCities().get(0))
-        // is the same as the city returned by mockCity()
         assertEquals(0, mockCity().compareTo(cityList.getCities().get(0)));
 
-        // This pushes down the original city
         City city = new City("Charlottetown", "Prince Edward Island");
         cityList.add(city);
 
-        // Now the original city should be at position 1
         assertEquals(0, city.compareTo(cityList.getCities().get(0)));
         assertEquals(0, mockCity().compareTo(cityList.getCities().get(1)));
+    }
+    @Test
+    void testHasCity() {
+        CityList cityList = mockCityList();
+        City city = new City("Charlottetown", "Prince Edward Island");
+        cityList.add(city);
+
+        assertTrue(cityList.hasCity(city));
+
+        City duplicateCity = new City("Charlottetown", "Prince Edward Island");
+        assertTrue(cityList.hasCity(duplicateCity));
+
+        City notInListCity = new City("Toronto", "Ontario");
+        assertFalse(cityList.hasCity(notInListCity));
+    }
+
+    @Test
+    void testDelete() {
+        CityList cityList = mockCityList();
+        City city = new City("Charlottetown", "Prince Edward Island");
+        cityList.add(city);
+
+        assertEquals(2, cityList.countCities());
+        assertTrue(cityList.hasCity(city));
+
+        cityList.delete(city);
+
+        assertEquals(1, cityList.countCities());
+        assertFalse(cityList.hasCity(city));
+    }
+
+    @Test
+    void testDeleteException() {
+        CityList cityList = mockCityList();
+        City city = new City("Charlottetown", "Prince Edward Island");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            cityList.delete(city);
+        });
+    }
+
+    @Test
+    void testCountCities() {
+        CityList cityList = mockCityList();
+        assertEquals(1, cityList.countCities());
+
+        City city = new City("Charlottetown", "Prince Edward Island");
+        cityList.add(city);
+
+        assertEquals(2, cityList.countCities());
     }
 }
